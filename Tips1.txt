@@ -1,0 +1,78 @@
+1. Create a new ReactJS app: 
+
+Yarn: 
+
+npm install -g yarn
+
+
+yarn create react-app your-project-name
+
+
+yarn start
+
+
+# links: 
+
+
+2. Force commands to be processed in terminal: 
+
+Set-ExecutionPolicy Bypass -Scope Process -Force 
+
+
+3. Yarn: 
+
+npm install -g yarn
+
+
+yarn create react-app your-project-name
+
+
+yarn start
+
+
+# links: 
+
+
+4. Install axios: 
+
+yarn add axios
+
+
+5. Install react-router-dom
+
+yarn add react-router-dom
+
+
+6. How to find an occuppied port: 
+netstat -ano | findstr :8080 
+
+
+How to kill an occuppied port: 
+taskkill /PID 0000 /F 
+
+
+7. Install Vite with Yarn (create project):
+
+yarn create vite my-app --template react
+
+..
+
+create project (For TypeScript support, use:): 
+
+yarn create vite my-app --template react-ts
+
+..
+
+
+
+
+
+
+
+
+
+
+
+
+
+
