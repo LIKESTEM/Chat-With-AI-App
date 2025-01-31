@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -170,7 +170,7 @@ const ChatComponent = () => {
       {/* Main Content */}
       <div className="pt-5">
         <div className="d-flex flex-column align-items-center">
-          <h2 className="text-center mb-4">AI Chat</h2>
+          <h2 className="text-center mb-4">LIKESTEM AI Chat</h2>
           {loading && <p>Loading...</p>}
 
           {/* Chat Container */}

@@ -17,30 +17,27 @@ public class HelloController {
         this.chatClient = chatClient.build();
     }
 
-    // Fetch all chat session IDs
     @GetMapping("/chat/sessions")
     public ResponseEntity<Set<String>> getChatSessions() {
         return ResponseEntity.ok(chatHistory.keySet());
     }
 
-    // Fetch chat history for a session
     @GetMapping("/chat/history/{sessionId}")
     public ResponseEntity<List<String>> getChatHistory(@PathVariable String sessionId) {
         return ResponseEntity.ok(chatHistory.getOrDefault(sessionId, new ArrayList<>()));
     }
 
-    // Send a message & get AI response
     @PostMapping("/chat/{sessionId}/{chat}")
     public ResponseEntity<List<String>> sendChatMessage(
             @PathVariable String sessionId,
             @PathVariable String chat) {
         try {
-            String response = chatClient.prompt(chat).call().content();
+            String fullResponse = chatClient.prompt(chat).call().content();
+            String response = fullResponse.contains("</think>") ? fullResponse.split("</think>", 2)[1].trim() : fullResponse;
 
-            // Store chat history
             chatHistory.putIfAbsent(sessionId, new ArrayList<>());
             chatHistory.get(sessionId).add("User: " + chat);
-            chatHistory.get(sessionId).add("AI: " + response);
+            chatHistory.get(sessionId).add("LIKESTEM AI: " + response);
 
             return ResponseEntity.ok(chatHistory.get(sessionId));
         } catch (Exception e) {
@@ -48,7 +45,6 @@ public class HelloController {
         }
     }
 
-    // Clear chat history
     @DeleteMapping("/chat/history/{sessionId}")
     public ResponseEntity<String> clearChatHistory(@PathVariable String sessionId) {
         chatHistory.remove(sessionId);

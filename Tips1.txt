@@ -76,3 +76,4 @@ yarn create vite my-app --template react-ts
 
 
 
+git push -u origin main
