@@ -180,25 +180,40 @@ const ChatComponent = () => {
             style={{
               maxHeight: "60vh",
               overflowY: "auto",
-              width: "90%", // Responsive width
-              maxWidth: "800px", // Limit width on larger screens
+              width: "90%",
+              maxWidth: "800px",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <strong>Current Conversation:</strong>
             {chatHistory.length > 0 ? (
-              chatHistory.map((message, index) => (
-                <p key={index} style={{ wordBreak: "break-word" }}>{message}</p>
-              ))
+              chatHistory.map((message, index) => {
+                const isUser = message.startsWith("User:");
+                return (
+                  <div
+                    key={index}
+                    style={{
+                      textAlign: isUser ? "right" : "left",
+                      backgroundColor: isUser ? "#dcf8c6" : "#f1f0f0",
+                      padding: "8px",
+                      borderRadius: "10px",
+                      margin: "5px 0",
+                      maxWidth: "70%",
+                      alignSelf: isUser ? "flex-end" : "flex-start",
+                    }}
+                  >
+                    {message.replace("User: ", "").replace("LIKESTEM AI: ", "")}
+                  </div>
+                );
+              })
             ) : (
               <p>No messages yet.</p>
             )}
           </Paper>
 
           {/* Input and Send Button */}
-          <div
-            className="d-flex flex-column w-100 align-items-center"
-            style={{ width: "90%", maxWidth: "800px" }} // Responsive width
-          >
+          <div className="d-flex flex-column w-100 align-items-center" style={{ width: "90%", maxWidth: "800px" }}>
             <TextField
               label="Enter your message"
               multiline
@@ -207,7 +222,7 @@ const ChatComponent = () => {
               onChange={(e) => setInput(e.target.value)}
               variant="outlined"
               fullWidth
-              className="mb-2" // Spacing
+              className="mb-2"
               disabled={loading}
             />
             <Button
@@ -215,7 +230,7 @@ const ChatComponent = () => {
               color="primary"
               onClick={handleChat}
               disabled={loading}
-              style={{ width: "100%" }} // Full width on smaller screens
+              style={{ width: "100%" }}
             >
               Send
             </Button>
