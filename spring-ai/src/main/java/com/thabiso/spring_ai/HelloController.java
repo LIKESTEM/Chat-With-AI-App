@@ -32,9 +32,16 @@ public class HelloController {
             @PathVariable String sessionId,
             @PathVariable String chat) {
         try {
+            // Fetch the AI response
             String fullResponse = chatClient.prompt(chat).call().content();
+
+            // Extract and clean response
             String response = fullResponse.contains("</think>") ? fullResponse.split("</think>", 2)[1].trim() : fullResponse;
 
+            // Format response for better readability
+            response = response.replaceAll("\n+", "\n\n").trim(); // Ensures paragraphs
+
+            // Store chat history
             chatHistory.putIfAbsent(sessionId, new ArrayList<>());
             chatHistory.get(sessionId).add("User: " + chat);
             chatHistory.get(sessionId).add("LIKESTEM AI: " + response);

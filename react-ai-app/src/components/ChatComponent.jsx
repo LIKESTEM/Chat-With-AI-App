@@ -3,7 +3,8 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { Paper, Button, TextField } from '@mui/material';
+import { Paper, Button, TextField,  } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ChatComponent = () => {
   const [input, setInput] = useState("");
@@ -171,7 +172,7 @@ const ChatComponent = () => {
       <div className="pt-5">
         <div className="d-flex flex-column align-items-center">
           <h2 className="text-center mb-4">LIKESTEM AI Chat</h2>
-          {loading && <p>Loading...</p>}
+          {loading && <CircularProgress disableShrink />}
 
           {/* Chat Container */}
           <Paper
