@@ -1,30 +1,33 @@
 package com.thabiso.spring_ai;
 
+import com.thabiso.spring_ai.service.ChatSessionService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class HelloController {
-    private final ChatClient chatClient;
-    private final Map<String, List<String>> chatHistory = new HashMap<>();
 
-    public HelloController(ChatClient.Builder chatClient) {
+    private final ChatClient chatClient;
+    private final ChatSessionService chatSessionService;
+
+    public HelloController(ChatClient.Builder chatClient, ChatSessionService chatSessionService) {
         this.chatClient = chatClient.build();
+        this.chatSessionService = chatSessionService;
     }
 
     @GetMapping("/chat/sessions")
-    public ResponseEntity<Set<String>> getChatSessions() {
-        return ResponseEntity.ok(chatHistory.keySet());
+    public ResponseEntity<List<String>> getChatSessions() {
+        return ResponseEntity.ok(chatSessionService.getChatSessions());
     }
 
     @GetMapping("/chat/history/{sessionId}")
     public ResponseEntity<List<String>> getChatHistory(@PathVariable String sessionId) {
-        return ResponseEntity.ok(chatHistory.getOrDefault(sessionId, new ArrayList<>()));
+        return ResponseEntity.ok(chatSessionService.getChatHistory(sessionId));
     }
 
     @PostMapping("/chat/{sessionId}/{chat}")
@@ -34,27 +37,19 @@ public class HelloController {
         try {
             // Fetch the AI response
             String fullResponse = chatClient.prompt(chat).call().content();
-
-            // Extract and clean response
             String response = fullResponse.contains("</think>") ? fullResponse.split("</think>", 2)[1].trim() : fullResponse;
+            response = response.replaceAll("\n+", "\n\n").trim();
 
-            // Format response for better readability
-            response = response.replaceAll("\n+", "\n\n").trim(); // Ensures paragraphs
-
-            // Store chat history
-            chatHistory.putIfAbsent(sessionId, new ArrayList<>());
-            chatHistory.get(sessionId).add("User: " + chat);
-            chatHistory.get(sessionId).add("LIKESTEM AI: " + response);
-
-            return ResponseEntity.ok(chatHistory.get(sessionId));
+            // Store chat history in database
+            return ResponseEntity.ok(chatSessionService.saveChatMessage(sessionId, chat, response));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Collections.singletonList("Error: " + e.getMessage()));
+            return ResponseEntity.badRequest().body(List.of("Error: " + e.getMessage()));
         }
     }
 
     @DeleteMapping("/chat/history/{sessionId}")
     public ResponseEntity<String> clearChatHistory(@PathVariable String sessionId) {
-        chatHistory.remove(sessionId);
+        chatSessionService.clearChatHistory(sessionId);
         return ResponseEntity.ok("Chat history cleared.");
     }
 }
