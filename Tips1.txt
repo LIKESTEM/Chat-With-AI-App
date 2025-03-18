@@ -64,16 +64,36 @@ yarn create vite my-app --template react-ts
 ..
 
 
-
-
-
-
-
-
-
-
-
-
-
+8. Push to main branch: 
 
 git push -u origin main
+
+
+9. install vite using yarn:
+
+npm install vite --save-dev
+
+
+10. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

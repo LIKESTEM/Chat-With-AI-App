@@ -15,6 +15,8 @@ public class ChatSession {
     private String sessionId;
 
     @ElementCollection
+    @CollectionTable(name = "messages", joinColumns = @JoinColumn(name = "cs_id"))
+    @Column(name = "message", columnDefinition = "TEXT")
     private List<String> messages = new ArrayList<>();
 
     public ChatSession() {}
